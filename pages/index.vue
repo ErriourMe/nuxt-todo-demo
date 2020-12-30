@@ -11,21 +11,43 @@
 
     <div class="row">
       <div v-for="(todo, i) in todos" :key="`todo-${i}`" class="col-12 mt-2">
-        <div class="row">
-          <div class="col-12 col-md-6">
-            {{ todo.name }}
-          </div>
-          <div class="col-12 col-md-6 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" @click="edit(i)">
-              Редактировать
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger ml-2"
-              @click="remove(i)"
-            >
-              Удалить
-            </button>
+        <div class="px-2 py-1 card">
+          <div class="row">
+            <div class="col-12 col-md-6 d-flex align-items-center">
+              <input
+                v-if="todo.editing"
+                v-model="todos[i].name"
+                class="form-control"
+                type="text"
+              />
+              <template v-else>
+                {{ todo.name }}
+              </template>
+            </div>
+            <div class="col-12 col-md-6 d-flex justify-content-end">
+              <button
+                v-if="todo.editing"
+                class="btn btn-success"
+                @click="patch(i)"
+              >
+                Сохранить
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btn btn-primary"
+                @click="edit(i)"
+              >
+                Редактировать
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger ml-2"
+                @click="remove(i)"
+              >
+                Удалить
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -50,7 +72,10 @@ export default {
     })
   },
   methods: {
-    edit(i) {},
+    edit(i) {
+      this.todos[i].editing = true
+      this.$set(this.todos, i, this.todos[i])
+    },
     remove(i) {
       this.todos.splice(i, 1)
     },
@@ -60,6 +85,17 @@ export default {
         .then((res) => {
           this.todos.push(this.form)
         })
+    },
+    patch(i) {
+      this.$axios.patch(
+        `http://starter-pack.io/api/tasks/${this.todos[i].id}`,
+        {
+          name: this.todos[i].name,
+        }
+      )
+
+      this.todos[i].editing = false
+      this.$set(this.todos, i, this.todos[i])
     },
   },
 }
