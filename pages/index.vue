@@ -14,21 +14,24 @@
         <div class="px-2 py-1 card">
           <div class="row">
             <div class="col-12 col-md-6 d-flex align-items-center">
-              <input
-                v-if="todo.editing"
-                v-model="todos[i].name"
-                class="form-control"
-                type="text"
-              />
-              <template v-else>
-                {{ todo.name }}
-              </template>
+              <input type="checkbox" @change="patch(i, !todo.completed)" />
+              <div class="ml-3">
+                <input
+                  v-if="todo.editing"
+                  v-model="todos[i].name"
+                  class="form-control"
+                  type="text"
+                />
+                <template v-else>
+                  {{ todo.name }}
+                </template>
+              </div>
             </div>
             <div class="col-12 col-md-6 d-flex justify-content-end">
               <button
                 v-if="todo.editing"
                 class="btn btn-success"
-                @click="patch(i)"
+                @click="patch(i, todo.completed)"
               >
                 Сохранить
               </button>
@@ -86,15 +89,17 @@ export default {
           this.todos.push(this.form)
         })
     },
-    patch(i) {
+    patch(i, completed) {
       this.$axios.patch(
         `http://starter-pack.io/api/tasks/${this.todos[i].id}`,
         {
           name: this.todos[i].name,
+          completed,
         }
       )
 
       this.todos[i].editing = false
+      this.todos[i].completed = completed
       this.$set(this.todos, i, this.todos[i])
     },
   },
