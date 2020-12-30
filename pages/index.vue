@@ -89,7 +89,7 @@ export default {
           this.todos.push(this.form)
         })
     },
-    patch(i, completed) {
+    put(i, completed) {
       this.$axios.patch(
         `http://starter-pack.io/api/tasks/${this.todos[i].id}`,
         {
