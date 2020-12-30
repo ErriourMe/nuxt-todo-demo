@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 <template>
   <div class="container">
     <div class="row py-3">
@@ -14,7 +15,11 @@
         <div class="px-2 py-1 card">
           <div class="row">
             <div class="col-12 col-md-6 d-flex align-items-center">
-              <input type="checkbox" @change="put(i, !todo.completed)" />
+              <input
+                type="checkbox"
+                :checked="todo.completed"
+                @change="put(i, !todo.completed)"
+              />
               <div class="ml-3">
                 <input
                   v-if="todo.editing"
