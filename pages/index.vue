@@ -90,13 +90,10 @@ export default {
         })
     },
     put(i, completed) {
-      this.$axios.patch(
-        `http://starter-pack.io/api/tasks/${this.todos[i].id}`,
-        {
-          name: this.todos[i].name,
-          completed,
-        }
-      )
+      this.$axios.put(`http://starter-pack.io/api/tasks/${this.todos[i].id}`, {
+        name: this.todos[i].name,
+        completed,
+      })
 
       this.todos[i].editing = false
       this.todos[i].completed = completed
